@@ -20,49 +20,65 @@ class PerfThread extends Thread {
 	public void run() {
 		Random rn = new Random();
 		long slATime = 0, tATime = 0, slMTime = 0, tMTime = 0;
-		int run1 = this.times, run2 = this.times;
-		System.out.println(Thread.currentThread().getId() + " entering access test phase: ");
-		while (run1 >= 0) {
-			int key = rn.nextInt() % this.size;
+		int run1 = 0, run2 = 0;
+		//System.out.println(Thread.currentThread().getId() + " entering access test phase......");
+		int correct = 0;
+		while (run1 < this.times) {
+			int key = Math.abs(rn.nextInt()) % this.size;
 			long startTime, endTime;
 
 			startTime = System.nanoTime();
+			String v1 = null;
 			synchronized(tmap) {
-				tmap.get(key);
+				v1 = tmap.get(key);
 			}
 			endTime = System.nanoTime();
 			tATime += (endTime - startTime);
 
 			startTime = System.nanoTime();
-			slmap.get(key);
+			String v2 = slmap.get(key);
 			endTime = System.nanoTime();
 			slATime += (endTime - startTime);
 
-			run1--;
-		}
-		System.out.println(Thread.currentThread().getId() + " done with access test. Took: SL=" + slATime + ", T=" + tATime);
+			System.out.print(".");
 
-		System.out.println(Thread.currentThread().getId() + " entering modify test phase: ");
-		while (run2 >= 0) {
-			int key = rn.nextInt() % this.size;
+			if (v1.equals(v2))
+				correct++;
+			run1++;
+		}
+		System.out.println("");
+		System.out.println(Thread.currentThread().getId() + " done with access test. Took: SL=" + slATime + ", T=" + tATime);
+		System.out.println(Thread.currentThread().getId() + " access correct? " + (correct == this.times));
+
+		//System.out.println(Thread.currentThread().getId() + " entering modify test phase....");
+		rn = new Random();
+		correct = 0;
+		while (run2 < this.times) {
+			int key = Math.abs(rn.nextInt()) % this.size;
 			long startTime, endTime;
 
 			startTime = System.nanoTime();
+			String v1 = null;
 			synchronized(tmap) {
-				tmap.put(key, "replaced key");
+				v1 = tmap.put(key, "replaced key");
 			}
 			endTime = System.nanoTime();
 			tMTime += (endTime - startTime);
 
 			startTime = System.nanoTime();
-			slmap.replace(key, "replaced key");
+			String v2 = slmap.replace(key, "replaced key");
 			endTime = System.nanoTime();
 			slMTime += (endTime - startTime);
 
-			run2--;
-		}
-		System.out.println(Thread.currentThread().getId() + " done with modify test. Took: SL=" + slMTime + ", T=" + tMTime);
+			System.out.print(".");
 
+			if (v1.equals(v2))
+				correct++;
+			run2++;
+		}
+		System.out.println("");
+		System.out.println(Thread.currentThread().getId() + " done with modify test. Took: SL=" + slMTime + ", T=" + tMTime);
+		System.out.println(Thread.currentThread().getId() + " modify correct? " + (correct == this.times));
 	}
 }
 
@@ -77,13 +93,15 @@ public class SkipListPerf {
 			String val = UUID.randomUUID().toString().replaceAll("-", "");
 			long startTime, endTime;
 
+			System.out.println("Entering " + i + ", " + val);
+
 			startTime = System.nanoTime();
-			tmap.put(size, val);
+			tmap.put(i, val);
 			endTime = System.nanoTime();
 			tTime += (endTime - startTime);
 
 			startTime = System.nanoTime();
-			slmap.put(size, val);
+			slmap.put(i, val);
 			endTime = System.nanoTime();
 			slTime += (endTime - startTime);
 		}
