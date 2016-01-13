@@ -27,28 +27,28 @@ class PerfThread extends Thread {
 			int key = Math.abs(rn.nextInt()) % this.size;
 			long startTime, endTime;
 
-			startTime = System.nanoTime();
+			/*startTime = System.nanoTime();
 			String v1 = null;
 			synchronized(tmap) {
 				v1 = tmap.get(key);
 			}
 			endTime = System.nanoTime();
-			tATime += (endTime - startTime);
+			tATime += (endTime - startTime);*/
 
 			startTime = System.nanoTime();
 			String v2 = slmap.get(key);
 			endTime = System.nanoTime();
 			slATime += (endTime - startTime);
 
-			System.out.print(".");
+			//System.out.print(".");
 
-			if (v1.equals(v2))
-				correct++;
+			//if (v1.equals(v2))
+			//	correct++;
 			run1++;
 		}
-		System.out.println("");
-		System.out.println(Thread.currentThread().getId() + " done with access test. Took: SL=" + slATime + ", T=" + tATime);
-		System.out.println(Thread.currentThread().getId() + " access correct? " + (correct == this.times));
+		//System.out.println("");
+		//System.out.println(Thread.currentThread().getId() + " done with access test. Took: SL=" + slATime + ", T=" + tATime);
+		//System.out.println(Thread.currentThread().getId() + " access correct? " + (correct == this.times));
 
 		//System.out.println(Thread.currentThread().getId() + " entering modify test phase....");
 		rn = new Random();
@@ -57,28 +57,29 @@ class PerfThread extends Thread {
 			int key = Math.abs(rn.nextInt()) % this.size;
 			long startTime, endTime;
 
-			startTime = System.nanoTime();
+			/*startTime = System.nanoTime();
 			String v1 = null;
 			synchronized(tmap) {
 				v1 = tmap.put(key, "replaced key");
 			}
 			endTime = System.nanoTime();
-			tMTime += (endTime - startTime);
+			tMTime += (endTime - startTime);*/
 
 			startTime = System.nanoTime();
 			String v2 = slmap.replace(key, "replaced key");
 			endTime = System.nanoTime();
 			slMTime += (endTime - startTime);
 
-			System.out.print(".");
+			//System.out.print(".");
 
-			if (v1.equals(v2))
-				correct++;
+			//if (v1.equals(v2))
+			//	correct++;
 			run2++;
 		}
-		System.out.println("");
-		System.out.println(Thread.currentThread().getId() + " done with modify test. Took: SL=" + slMTime + ", T=" + tMTime);
-		System.out.println(Thread.currentThread().getId() + " modify correct? " + (correct == this.times));
+		//System.out.println("");
+		//System.out.println(Thread.currentThread().getId() + " done with modify test. Took: SL=" + slMTime + ", T=" + tMTime);
+		//System.out.println(Thread.currentThread().getId() + " modify correct? " + (correct == this.times));
+		System.out.println(slATime/times + "," + slMTime/times);
 	}
 }
 
@@ -87,13 +88,13 @@ public class SkipListPerf {
 	private static ConcurrentSkipListMap<Integer, String> slmap;
 
 	public static void populateMaps(int size) {
-		System.out.println("<Single-Threaded insertion phase>");
+		//System.out.println("<Single-Threaded insertion phase>");
 		long tTime = 0, slTime = 0;
 		for (int i = 0; i < size; i++) {
 			String val = UUID.randomUUID().toString().replaceAll("-", "");
 			long startTime, endTime;
 
-			System.out.println("Entering " + i + ", " + val);
+			//System.out.println("Entering " + i + ", " + val);
 
 			startTime = System.nanoTime();
 			tmap.put(i, val);
@@ -105,8 +106,9 @@ public class SkipListPerf {
 			endTime = System.nanoTime();
 			slTime += (endTime - startTime);
 		}
-		System.out.println("Total insertion time taken by TreeMap: " + tTime);
-		System.out.println("Total insertion time taken by SkipListMap: " + slTime);
+		//System.out.println("Average insertion time taken by TreeMap: " + tTime/size);
+		//System.out.println("Average insertion time taken by SkipListMap: " + slTime/size);
+		//System.out.println(tTime/size + "," + slTime/size);
 	}
 
 	public static void main(String args[]) {
@@ -114,6 +116,7 @@ public class SkipListPerf {
 		tmap = new TreeMap<Integer, String>();
 		int size = Integer.parseInt(args[0]);
 		int numThreads = Integer.parseInt(args[1]);
+		//System.out.println(size + "," + numThreads);
 		populateMaps(size);
 		for (int i = 0; i < numThreads; i++) {
 			PerfThread pt = new PerfThread(tmap, slmap, size/numThreads);
