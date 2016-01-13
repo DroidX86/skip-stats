@@ -1,0 +1,5 @@
+BEGIN { FS=","; sum1=0; sum2=0; sum3=0; sum4=0;}
+
+{ sum1+=$1; sum2+=$2; sum3+=$3; sum4+=$4}
+
+END { print "Tree=", sum1/NR, sum2/NR, "SL=", sum3/NR, sum4/NR}

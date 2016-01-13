@@ -9,12 +9,12 @@ class PerfThread extends Thread {
 	private ConcurrentSkipListMap<Integer, String> slmap;
 	int size, times;
 
-	public PerfThread(TreeMap<Integer, String> tmap, ConcurrentSkipListMap<Integer, String> slmap, int percent) {
+	public PerfThread(TreeMap<Integer, String> tmap, ConcurrentSkipListMap<Integer, String> slmap, int times) {
 		this.tmap = tmap;
 		this.slmap = slmap;
 		this.size = this.tmap.size();
 		if (this.slmap.size() == this.tmap.size())
-			this.times = this.tmap.size() * (percent / 100);
+			this.times = times/1000;
 	}
 
 	public void run() {
@@ -27,13 +27,13 @@ class PerfThread extends Thread {
 			int key = Math.abs(rn.nextInt()) % this.size;
 			long startTime, endTime;
 
-			/*startTime = System.nanoTime();
+			startTime = System.nanoTime();
 			String v1 = null;
 			synchronized(tmap) {
 				v1 = tmap.get(key);
 			}
 			endTime = System.nanoTime();
-			tATime += (endTime - startTime);*/
+			tATime += (endTime - startTime);
 
 			startTime = System.nanoTime();
 			String v2 = slmap.get(key);
@@ -42,8 +42,8 @@ class PerfThread extends Thread {
 
 			//System.out.print(".");
 
-			//if (v1.equals(v2))
-			//	correct++;
+			if (v1.equals(v2))
+				correct++;
 			run1++;
 		}
 		//System.out.println("");
@@ -57,13 +57,13 @@ class PerfThread extends Thread {
 			int key = Math.abs(rn.nextInt()) % this.size;
 			long startTime, endTime;
 
-			/*startTime = System.nanoTime();
+			startTime = System.nanoTime();
 			String v1 = null;
 			synchronized(tmap) {
 				v1 = tmap.put(key, "replaced key");
 			}
 			endTime = System.nanoTime();
-			tMTime += (endTime - startTime);*/
+			tMTime += (endTime - startTime);
 
 			startTime = System.nanoTime();
 			String v2 = slmap.replace(key, "replaced key");
@@ -72,14 +72,14 @@ class PerfThread extends Thread {
 
 			//System.out.print(".");
 
-			//if (v1.equals(v2))
-			//	correct++;
+			if (v1.equals(v2))
+				correct++;
 			run2++;
 		}
 		//System.out.println("");
 		//System.out.println(Thread.currentThread().getId() + " done with modify test. Took: SL=" + slMTime + ", T=" + tMTime);
 		//System.out.println(Thread.currentThread().getId() + " modify correct? " + (correct == this.times));
-		System.out.println(slATime/times + "," + slMTime/times);
+		System.out.println(tATime/times + "," + tMTime/times + "," + slATime/times + "," + slMTime/times);
 	}
 }
 
@@ -88,7 +88,6 @@ public class SkipListPerf {
 	private static ConcurrentSkipListMap<Integer, String> slmap;
 
 	public static void populateMaps(int size) {
-		//System.out.println("<Single-Threaded insertion phase>");
 		long tTime = 0, slTime = 0;
 		for (int i = 0; i < size; i++) {
 			String val = UUID.randomUUID().toString().replaceAll("-", "");
@@ -119,7 +118,7 @@ public class SkipListPerf {
 		//System.out.println(size + "," + numThreads);
 		populateMaps(size);
 		for (int i = 0; i < numThreads; i++) {
-			PerfThread pt = new PerfThread(tmap, slmap, size/numThreads);
+			PerfThread pt = new PerfThread(tmap, slmap, size);
 			pt.start();
 		}
 	}
