@@ -1,0 +1,8 @@
+References:
+	1. Keir Fraser "Paractical Lock-freedom" http://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-579.pdf
+	2. William Pugh "Skip lists: A probabilistic alternative to balanced trees" ftp://ftp.cs.umd.edu/pub/skipLists/skiplists.pdf
+	3. Thomas Papadakis "Skip Lists and Probabilistic Analysis of Algorithms" https://cs.uwaterloo.ca/research/tr/1993/28/root2side.pdf
+	4. Kier Fraser "Concurrent Programming without Locks" http://www.cl.cam.ac.uk/research/srg/netos/papers/2007-cpwl.pdf
+	5. http://stackoverflow.com/questions/256511/skip-list-vs-binary-tree
+	6. http://www.drdobbs.com/parallel/choose-concurrency-friendly-data-structu/208801371
+	
