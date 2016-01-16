@@ -1,4 +1,4 @@
-BEGIN { FS=","; sum1=0; sum2=0; sum3=0; sum4=0;}
+BEGIN {sum1=0; sum2=0; sum3=0; sum4=0;}
 
 { sum1+=$1; sum2+=$2; sum3+=$3; sum4+=$4}
 
