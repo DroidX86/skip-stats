@@ -14,7 +14,7 @@ class PerfThread extends Thread {
 		this.slmap = slmap;
 		this.size = this.tmap.size();
 		if (this.slmap.size() == this.tmap.size())
-			this.times = times/1000;
+			this.times = times*10;
 	}
 
 	public void run() {
@@ -79,7 +79,7 @@ class PerfThread extends Thread {
 		//System.out.println("");
 		//System.out.println(Thread.currentThread().getId() + " done with modify test. Took: SL=" + slMTime + ", T=" + tMTime);
 		//System.out.println(Thread.currentThread().getId() + " modify correct? " + (correct == this.times));
-		System.out.println(tATime/times + "," + tMTime/times + "," + slATime/times + "," + slMTime/times);
+		System.out.println(tATime/times + " " + tMTime/times + " " + slATime/times + " " + slMTime/times);
 	}
 }
 
