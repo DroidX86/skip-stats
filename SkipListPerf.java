@@ -14,7 +14,7 @@ class PerfThread extends Thread {
 		this.slmap = slmap;
 		this.size = this.tmap.size();
 		if (this.slmap.size() == this.tmap.size())
-			this.times = times*10;
+			this.times = times;
 	}
 
 	public void run() {
